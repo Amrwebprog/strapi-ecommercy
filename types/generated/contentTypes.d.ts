@@ -537,6 +537,31 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCartCart extends Struct.CollectionTypeSchema {
+  collectionName: 'carts';
+  info: {
+    singularName: 'cart';
+    pluralName: 'carts';
+    displayName: 'cart';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    userID: Schema.Attribute.String;
+    productID: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::cart.cart'>;
+  };
+}
+
 export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   collectionName: 'categories';
   info: {
@@ -593,12 +618,39 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiMyuserMyuser extends Struct.CollectionTypeSchema {
+  collectionName: 'myusers';
+  info: {
+    singularName: 'myuser';
+    pluralName: 'myusers';
+    displayName: 'myuser';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Schema.Attribute.Email;
+    password: Schema.Attribute.Password;
+    username: Schema.Attribute.String;
+    phone_number: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::myuser.myuser'>;
+  };
+}
+
 export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   collectionName: 'products';
   info: {
     singularName: 'product';
     pluralName: 'products';
-    displayName: 'Product';
+    displayName: 'product';
     description: '';
   };
   options: {
@@ -606,14 +658,15 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   };
   attributes: {
     product_name: Schema.Attribute.String;
-    offer: Schema.Attribute.Integer;
+    offer: Schema.Attribute.String;
     new_arive: Schema.Attribute.Boolean;
-    price: Schema.Attribute.Integer;
+    price: Schema.Attribute.String;
     Specifications: Schema.Attribute.Text;
     description: Schema.Attribute.Text;
-    stock: Schema.Attribute.Integer;
+    stock: Schema.Attribute.String;
     product_img: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
+      'images' | 'files' | 'videos' | 'audios',
+      true
     >;
     brand: Schema.Attribute.String;
     Categores: Schema.Attribute.String;
@@ -1009,8 +1062,10 @@ declare module '@strapi/strapi' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::about.about': ApiAboutAbout;
       'api::brand.brand': ApiBrandBrand;
+      'api::cart.cart': ApiCartCart;
       'api::category.category': ApiCategoryCategory;
       'api::global.global': ApiGlobalGlobal;
+      'api::myuser.myuser': ApiMyuserMyuser;
       'api::product.product': ApiProductProduct;
       'admin::permission': AdminPermission;
       'admin::user': AdminUser;

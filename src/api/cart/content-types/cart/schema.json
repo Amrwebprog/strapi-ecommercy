@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "carts",
+  "info": {
+    "singularName": "cart",
+    "pluralName": "carts",
+    "displayName": "cart"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "userID": {
+      "type": "string"
+    },
+    "productID": {
+      "type": "string"
+    }
+  }
+}

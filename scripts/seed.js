@@ -45,7 +45,7 @@ async function setPublicPermissions(newPermissions) {
 
   // Create the new permissions and link them to the public role
   const allPermissionsToCreate = [];
-  Object.keys(newPermissions).map((controller) => {
+  Object.keys(newPermissions).forEach((controller) => {
     const actions = newPermissions[controller];
     const permissionsToCreate = actions.map((action) => {
       return strapi.query('plugin::users-permissions.permission').create({
@@ -104,8 +104,9 @@ async function createEntry({ model, entry }) {
     await strapi.documents(`api::${model}.${model}`).create({
       data: entry,
     });
+    console.log(`Successfully created entry for model: ${model}`); // Log successful creation
   } catch (error) {
-    console.error({ model, entry, error });
+    console.error(`Error creating entry for model: ${model}`, error);
   }
 }
 
@@ -143,22 +144,15 @@ async function updateBlocks(blocks) {
   for (const block of blocks) {
     if (block.__component === 'shared.media') {
       const uploadedFiles = await checkFileExistsBeforeUpload([block.file]);
-      // Copy the block to not mutate directly
       const blockCopy = { ...block };
-      // Replace the file name on the block with the actual file
       blockCopy.file = uploadedFiles;
       updatedBlocks.push(blockCopy);
     } else if (block.__component === 'shared.slider') {
-      // Get files already uploaded to Strapi or upload new files
       const existingAndUploadedFiles = await checkFileExistsBeforeUpload(block.files);
-      // Copy the block to not mutate directly
       const blockCopy = { ...block };
-      // Replace the file names on the block with the actual files
       blockCopy.files = existingAndUploadedFiles;
-      // Push the updated block
       updatedBlocks.push(blockCopy);
     } else {
-      // Just push the block as is
       updatedBlocks.push(block);
     }
   }
@@ -177,8 +171,7 @@ async function importArticles() {
         ...article,
         cover,
         blocks: updatedBlocks,
-        // Make sure it's not a draft
-        publishedAt: Date.now(),
+        publishedAt: Date.now(), // Ensure the article is published
       },
     });
   }
@@ -192,8 +185,7 @@ async function importGlobal() {
     entry: {
       ...global,
       favicon,
-      // Make sure it's not a draft
-      publishedAt: Date.now(),
+      publishedAt: Date.now(), // Ensure it's published
       defaultSeo: {
         ...global.defaultSeo,
         shareImage,
@@ -210,8 +202,7 @@ async function importAbout() {
     entry: {
       ...about,
       blocks: updatedBlocks,
-      // Make sure it's not a draft
-      publishedAt: Date.now(),
+      publishedAt: Date.now(), // Ensure it's published
     },
   });
 }
